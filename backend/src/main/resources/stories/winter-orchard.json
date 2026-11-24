@@ -1,0 +1,72 @@
+{
+  "title": "The Winter Orchard",
+  "author": "Adventure Book",
+  "difficulty": "MEDIUM",
+  "sections": [
+    {
+      "id": 1,
+      "type": "BEGIN",
+      "text": "An early frost has sealed the orchard gates. Down the hill, smoke curls from the caretaker’s cottage.",
+      "options": [
+        {
+          "description": "Knock at the cottage",
+          "gotoId": 2
+        },
+        {
+          "description": "Climb the ice-covered gate",
+          "gotoId": 3,
+          "consequence": {
+            "type": "LOSE_HEALTH",
+            "value": 6,
+            "text": "You slip on the frozen iron and land hard."
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "NODE",
+      "text": "The caretaker wraps your hands in warm cloth and lends you a key.",
+      "options": [
+        {
+          "description": "Catch your breath and finish the job",
+          "gotoId": 4,
+          "consequence": {
+            "type": "GAIN_HEALTH",
+            "value": 3,
+            "text": "A moment of rest restores your strength."
+          }
+        },
+        {
+          "description": "Return to where you started",
+          "gotoId": 1
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "NODE",
+      "text": "You can still turn back. The safer route is within reach.",
+      "options": [
+        {
+          "description": "Go back and take the safer route",
+          "gotoId": 2
+        },
+        {
+          "description": "Push on despite the danger",
+          "gotoId": 4,
+          "consequence": {
+            "type": "LOSE_HEALTH",
+            "value": 5,
+            "text": "You are hit again before you can get to safety."
+          }
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "END",
+      "text": "You open the greenhouse just in time to bring the seedlings inside."
+    }
+  ]
+}

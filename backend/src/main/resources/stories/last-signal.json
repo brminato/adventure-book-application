@@ -1,0 +1,72 @@
+{
+  "title": "The Last Signal",
+  "author": "Adventure Book",
+  "difficulty": "HARD",
+  "sections": [
+    {
+      "id": 1,
+      "type": "BEGIN",
+      "text": "The mountain relay crackles. Its weather warning is still unsent, and the station lights have gone dark.",
+      "options": [
+        {
+          "description": "Open the service panel",
+          "gotoId": 2
+        },
+        {
+          "description": "Bridge the damaged power terminals",
+          "gotoId": 3,
+          "consequence": {
+            "type": "LOSE_HEALTH",
+            "value": 6,
+            "text": "The damaged terminals arc and burn your hand."
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "NODE",
+      "text": "The service drawer holds a charged battery and instructions for a manual transmission.",
+      "options": [
+        {
+          "description": "Catch your breath and finish the job",
+          "gotoId": 4,
+          "consequence": {
+            "type": "GAIN_HEALTH",
+            "value": 3,
+            "text": "A moment of rest restores your strength."
+          }
+        },
+        {
+          "description": "Return to where you started",
+          "gotoId": 1
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "NODE",
+      "text": "You can still turn back. The safer route is within reach.",
+      "options": [
+        {
+          "description": "Go back and take the safer route",
+          "gotoId": 2
+        },
+        {
+          "description": "Push on despite the danger",
+          "gotoId": 4,
+          "consequence": {
+            "type": "LOSE_HEALTH",
+            "value": 5,
+            "text": "You are hit again before you can get to safety."
+          }
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "END",
+      "text": "The warning goes out. A valley station answers with three clear tones."
+    }
+  ]
+}

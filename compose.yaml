@@ -1,0 +1,15 @@
+services:
+  backend:
+    build: ./backend
+    environment:
+      ADVENTURE_BOOKS_DIR: /app/data/books
+    volumes:
+      - books:/app/data/books
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "127.0.0.1:8080:8080"
+volumes:
+  books:

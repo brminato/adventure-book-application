@@ -1,0 +1,104 @@
+@if (game(); as active) {
+  <header class="game-bar">
+    <div class="game-bar-inner">
+      <button class="secondary" type="button" (click)="leave()" [disabled]="busy()">← Library</button>
+      <span class="book-name">{{ active.view.title }}</span>
+      <div class="game-tools">
+        <span class="health" role="status">♥ {{ active.view.health }} / 10 HP</span>
+        <button class="secondary" type="button" (click)="save()"
+          [disabled]="busy() || active.view.status !== 'PLAYING'">Save progress</button>
+      </div>
+    </div>
+  </header>
+  <main class="reading">
+    @if (error()) { <p class="message error" role="alert">{{ error() }}</p> }
+    @if (notice()) { <p class="message" role="status">{{ notice() }}</p> }
+    <article class="page" [attr.aria-busy]="busy()">
+      @switch (active.view.status) {
+        @case ('PLAYING') { <h1 id="page-heading" tabindex="-1">Section {{ active.view.sectionId }}</h1> }
+        @case ('COMPLETED') { <h1 id="page-heading" tabindex="-1">Adventure complete</h1> }
+        @case ('DEAD') { <h1 id="page-heading" tabindex="-1">You ran out of health</h1> }
+        @case ('LIMIT_REACHED') { <h1 id="page-heading" tabindex="-1">Choice limit reached</h1> }
+      }
+      @if (active.view.consequence) {
+        <p class="message">{{ active.view.consequence }}</p>
+      }
+      @if (active.view.status !== 'DEAD') {
+        <p class="story">{{ active.view.text }}</p>
+      }
+      @if (active.view.status === 'PLAYING') {
+        <h2>What do you choose?</h2>
+        <ol class="choices">
+          @for (choice of active.view.choices; track choice.index) {
+            <li><button class="choice" type="button" (click)="choose(choice.index)" [disabled]="busy()">
+              <span class="choice-number" aria-hidden="true">{{ choice.index + 1 }}</span>
+              {{ choice.description }}
+            </button></li>
+          }
+        </ol>
+      } @else {
+        <button class="primary" type="button" (click)="play(active.book)" [disabled]="busy()">Play again</button>
+      }
+    </article>
+  </main>
+} @else {
+  <header class="hero">
+    <div class="hero-inner">
+      <h1 id="page-heading" tabindex="-1">Adventure Awaits</h1>
+      <p>Choose a story and decide what happens next.</p>
+    </div>
+  </header>
+  <main class="library" [attr.aria-busy]="loading()">
+    <div class="library-heading">
+      <h2>The Adventure Library</h2>
+      <button class="secondary" type="button" (click)="bookFile.click()" [disabled]="busy() || loading()">Import JSON</button>
+      <input type="file" accept=".json,application/json" hidden #bookFile (change)="import(bookFile)">
+    </div>
+    @if (notice()) { <p class="message" role="status">{{ notice() }}</p> }
+    @if (error()) { <p class="message error" role="alert">{{ error() }}</p> }
+    <div class="filters">
+      <label>Search books
+        <input type="search" placeholder="Title or author" [value]="query()" (input)="query.set(search.value)" #search>
+      </label>
+      <label>Difficulty
+        <select [value]="difficulty()" (change)="difficulty.set($any(level.value))" #level>
+          <option value="">All difficulties</option>
+          @for (level of difficulties; track level) {
+            <option [value]="level">{{ level.toLowerCase() }}</option>
+          }
+        </select>
+      </label>
+    </div>
+    @if (loading()) {
+      <p role="status">Loading the library…</p>
+    } @else if (error() && !books().length) {
+      <button class="secondary" type="button" (click)="loadBooks()">Retry</button>
+    } @else if (!filteredBooks().length) {
+      <p role="status">No books match your search.</p>
+    }
+    <ul class="cards">
+      @for (book of filteredBooks(); track book.id) {
+        <li class="card">
+          <div class="cover" [attr.data-difficulty]="book.difficulty" aria-hidden="true"></div>
+          <div class="card-body">
+            <p class="difficulty">{{ book.difficulty.toLowerCase() }}</p>
+            <h3>{{ book.title }}</h3>
+            <p class="author">By {{ book.author }}</p>
+            <p class="blurb">{{ book.description }}</p>
+            <div class="card-actions">
+              @if (saves()[book.id]; as saved) {
+                <button class="primary" type="button" (click)="play(book, saved)" [disabled]="busy()"
+                  [attr.aria-label]="'Resume ' + book.title">Resume</button>
+                <button class="secondary" type="button" (click)="play(book)" [disabled]="busy()"
+                  [attr.aria-label]="'Start a new game in ' + book.title">New game</button>
+              } @else {
+                <button class="primary" type="button" (click)="play(book)" [disabled]="busy()"
+                  [attr.aria-label]="'Begin ' + book.title">Begin adventure</button>
+              }
+            </div>
+          </div>
+        </li>
+      }
+    </ul>
+  </main>
+}

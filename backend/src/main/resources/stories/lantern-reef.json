@@ -1,0 +1,72 @@
+{
+  "title": "Lantern Reef",
+  "author": "Adventure Book",
+  "difficulty": "EASY",
+  "sections": [
+    {
+      "id": 1,
+      "type": "BEGIN",
+      "text": "Below the lighthouse, a shutter blinks three times from a boat on the reef. The tide has uncovered two routes across the rocks.",
+      "options": [
+        {
+          "description": "Follow the old signal posts",
+          "gotoId": 2
+        },
+        {
+          "description": "Cross the reef before the waves return",
+          "gotoId": 3,
+          "consequence": {
+            "type": "LOSE_HEALTH",
+            "value": 6,
+            "text": "A wave knocks you against the reef."
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "NODE",
+      "text": "At the last post you find a rope stretched to the boat. Someone on deck pulls it taut.",
+      "options": [
+        {
+          "description": "Catch your breath and finish the job",
+          "gotoId": 4,
+          "consequence": {
+            "type": "GAIN_HEALTH",
+            "value": 3,
+            "text": "A moment of rest restores your strength."
+          }
+        },
+        {
+          "description": "Return to where you started",
+          "gotoId": 1
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "NODE",
+      "text": "You can still turn back. The safer route is within reach.",
+      "options": [
+        {
+          "description": "Go back and take the safer route",
+          "gotoId": 2
+        },
+        {
+          "description": "Push on despite the danger",
+          "gotoId": 4,
+          "consequence": {
+            "type": "LOSE_HEALTH",
+            "value": 5,
+            "text": "You are hit again before you can get to safety."
+          }
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "END",
+      "text": "You lead the stranded crew back to the lighthouse before the tide comes in."
+    }
+  ]
+}
